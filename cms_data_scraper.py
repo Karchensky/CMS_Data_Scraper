@@ -9,11 +9,18 @@ class cms_data_scraper:
         self.endpoint_extention = endpoint_extention
         self.endpoint = 'https://data.cms.gov/data-api/v1/dataset/' + endpoint_extention + '/data'
 
-    # Handles case-insensitive fields
+    # Handles case-insensitive fields & some handling of UUID's with inconsistent field names.
     def get_key(self, item, key):
-        for k in item.keys():
-            if k.upper() == key.upper():
-                return item[k]
+        field_mappings = {
+            "HRS_RNDON": ["HRS_RN_DONADMIN"],
+            "HRS_LPNADMIN": ["HRS_LPN_ADMIN"],
+            "HRS_NATRN": ["HRS_NA_TRN"]
+        }
+        key_variations = [key.upper(), key.lower(), key.capitalize()]
+        for variation in key_variations:
+            for k in item.keys():
+                if k.upper() == variation or k.upper() in field_mappings.get(variation, []):
+                    return item[k]
         return None
 
     # This scrapes the CMS data for a given month
