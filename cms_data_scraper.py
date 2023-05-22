@@ -9,6 +9,10 @@ class cms_data_scraper:
         self.endpoint_extention = endpoint_extention
         self.endpoint = 'https://data.cms.gov/data-api/v1/dataset/' + endpoint_extention + '/data'
 
+    # Handles mismatched upper/lower case fields
+    def get_key(self, item, key):
+        return item.get(key.upper(), item.get(key.lower(), None))
+
     # This scrapes the CMS data for a given month
     def scraper_cms(self):
         endpoint = self.endpoint
@@ -16,44 +20,45 @@ class cms_data_scraper:
         data = json.loads(response.text)
         cms_data = []
         for item in data:
+
             uuid = self.endpoint_extention
-            provnum = item.get("PROVNUM", None)
-            provname = item.get("PROVNAME", None)
-            city = item.get("CITY", None)
-            state = item.get("STATE", None)
-            county_name = item.get("COUNTY_NAME", None)
-            county_fips = item.get("COUNTY_FIPS", None)
-            cy_qtr = item.get("CY_Qtr", None)
-            workdate_str = item.get("WorkDate", None)
+            provnum = self.get_key(item, "PROVNUM")
+            provname = self.get_key(item, "PROVNAME")
+            city = self.get_key(item, "CITY")
+            state = self.get_key(item, "STATE")
+            county_name = self.get_key(item, "COUNTY_NAME")
+            county_fips = self.get_key(item, "COUNTY_FIPS")
+            cy_qtr = self.get_key(item, "CY_QTR")
+            workdate_str = self.get_key(item, "WorkDate")
             if workdate_str is not None:
                 workdate = datetime.strptime(workdate_str, "%Y%m%d").date().strftime("%Y-%m-%d")
             else:
                 workdate = None
-            mdscensus = item.get("MDScensus", None)
-            hrs_rndon = item.get("Hrs_RNDON", None)
-            hrs_rndon_emp = item.get("Hrs_RNDON_emp", None)
-            hrs_rndon_ctr = item.get("Hrs_RNDON_ctr", None)
-            hrs_rnadmin = item.get("Hrs_RNadmin", None)
-            hrs_rnadmin_emp = item.get("Hrs_RNadmin_emp", None)
-            hrs_rnadmin_ctr = item.get("Hrs_RNadmin_ctr", None)
-            hrs_rn = item.get("Hrs_RN", None)
-            hrs_rn_emp = item.get("Hrs_RN_emp", None)
-            hrs_rn_ctr = item.get("Hrs_RN_ctr", None)
-            hrs_lpnadmin = item.get("Hrs_LPNadmin", None)
-            hrs_lpnadmin_emp = item.get("Hrs_LPNadmin_emp", None)
-            hrs_lpnadmin_ctr = item.get("Hrs_LPNadmin_ctr", None)
-            hrs_lpn = item.get("Hrs_LPN", None)
-            hrs_lpn_emp = item.get("Hrs_LPN_emp", None)
-            hrs_lpn_ctr = item.get("Hrs_LPN_ctr", None)
-            hrs_cna = item.get("Hrs_CNA", None)
-            hrs_cna_emp = item.get("Hrs_CNA_emp", None)
-            hrs_cna_ctr = item.get("Hrs_CNA_ctr", None)
-            hrs_natrn = item.get("Hrs_NAtrn", None)
-            hrs_natrn_emp = item.get("Hrs_NAtrn_emp", None)
-            hrs_natrn_ctr = item.get("Hrs_NAtrn_ctr", None)
-            hrs_medaide = item.get("Hrs_MedAide", None)
-            hrs_medaide_emp = item.get("Hrs_MedAide_emp", None)
-            hrs_medaide_ctr = item.get("Hrs_MedAide_ctr", None)
+            mdscensus = self.get_key(item, "MDScensus")
+            hrs_rndon = self.get_key(item, "Hrs_RNDON")
+            hrs_rndon_emp = self.get_key(item, "Hrs_RNDON_emp")
+            hrs_rndon_ctr = self.get_key(item, "Hrs_RNDON_ctr")
+            hrs_rnadmin = self.get_key(item, "Hrs_RNadmin")
+            hrs_rnadmin_emp = self.get_key(item, "Hrs_RNadmin_emp")
+            hrs_rnadmin_ctr = self.get_key(item, "Hrs_RNadmin_ctr")
+            hrs_rn = self.get_key(item, "Hrs_RN")
+            hrs_rn_emp = self.get_key(item, "Hrs_RN_emp")
+            hrs_rn_ctr = self.get_key(item, "Hrs_RN_ctr")
+            hrs_lpnadmin = self.get_key(item, "Hrs_LPNadmin")
+            hrs_lpnadmin_emp = self.get_key(item, "Hrs_LPNadmin_emp")
+            hrs_lpnadmin_ctr = self.get_key(item, "Hrs_LPNadmin_ctr")
+            hrs_lpn = self.get_key(item, "Hrs_LPN")
+            hrs_lpn_emp = self.get_key(item, "Hrs_LPN_emp")
+            hrs_lpn_ctr = self.get_key(item, "Hrs_LPN_ctr")
+            hrs_cna = self.get_key(item, "Hrs_CNA")
+            hrs_cna_emp = self.get_key(item, "Hrs_CNA_emp")
+            hrs_cna_ctr = self.get_key(item, "Hrs_CNA_ctr")
+            hrs_natrn = self.get_key(item, "Hrs_NAtrn")
+            hrs_natrn_emp = self.get_key(item, "Hrs_NAtrn_emp")
+            hrs_natrn_ctr = self.get_key(item, "Hrs_NAtrn_ctr")
+            hrs_medaide = self.get_key(item, "Hrs_MedAide")
+            hrs_medaide_emp = self.get_key(item, "Hrs_MedAide_emp")
+            hrs_medaide_ctr = self.get_key(item, "Hrs_MedAide_ctr")
 
             cms_data.append([
                 uuid, provnum, provname, city, state, county_name, county_fips, cy_qtr,
