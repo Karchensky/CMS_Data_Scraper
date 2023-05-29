@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CMS Data Scraper</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>CMS Data Scraper</h1>
+    <form action="{{ url_for('result') }}" method="POST">
+      <label for="uuid_list">Enter UUIDs (comma-separated):</label><br>
+      <input type="text" id="uuid_list" name="uuid_list" required><br><br>
+      <button class="btn" type="submit">Process</button>
+    </form>
+  </div>
+</body>
+</html>
