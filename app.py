@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, send_file, make_response
+from flask import Flask, render_template, request, send_file, make_response, send_from_directory
 import io
 import pandas as pd
 from cms_data_scraper import cms_data_scraper
+import os
 
 app = Flask(__name__)
 
@@ -35,6 +36,12 @@ def result():
     response.headers['Content-Disposition'] = 'attachment; filename=cms_data.csv'
 
     return response
+
+# Route for serving static files (styles.css, images, etc.)
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
 if __name__ == '__main__':
     app.run()
